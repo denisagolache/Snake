@@ -3,6 +3,8 @@ import random
 class Food:
     def __init__(self, board_size, obstacles, snake_body):
         self.board_size = board_size
+        self.obstacles = obstacles
+        self.snake_body = snake_body
         self.position = self.generate_new_position(obstacles, snake_body)
 
     def generate_new_position(self, obstacles, snake_body):
