@@ -7,9 +7,19 @@ class Food:
         self.snake_body = snake_body
         self.position = self.generate_new_position(obstacles, snake_body)
 
-    def generate_new_position(self, obstacles, snake_body):
+    def generate_new_position(self, obstacles, snake_body, min_distance=2):
         while True:
             x = random.randint(0, self.board_size[0] - 1)
             y = random.randint(0, self.board_size[1] - 1)
-            if (x, y) not in obstacles and (x, y) not in snake_body:
-                return (x, y)
+            new_position = (x, y)
+
+            if (
+                new_position not in snake_body
+                and all(self.calculate_distance(new_position, obs) >= min_distance for obs in obstacles)
+            ):
+                return new_position
+
+    @staticmethod
+    def calculate_distance(pos1, pos2):
+        #calculeaza distanta Manhattan intre doua pozitii
+        return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])

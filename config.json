@@ -1,5 +1,5 @@
 {
-  "board_size": [40, 30], 
+  "board_size": [30, 30], 
   "obstacles": [
       [10, 10],
       [15, 15],

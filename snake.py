@@ -46,6 +46,6 @@ class Snake:
             return True
         if head in obstacles: 
             return True
-        if head[0] < 0 or head[0] >= board_size[0] or head[1] < 0 or head[1] >= board_size[1]:  # Coliziune cu marginea
+        if head[0] < 0 or head[0] >= board_size[0] or head[1] < 0 or head[1] >= board_size[1]: 
             return True
         return False
