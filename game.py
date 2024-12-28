@@ -3,7 +3,6 @@ import pygame
 import sys
 import random
 import time
-import os
 from utils import load_config
 from snake import Snake
 from food import Food
@@ -45,9 +44,16 @@ def main():
         sys.exit(1)
 
     pygame.init()
+    pygame.mixer.init()  
+
+    
+    eat_sound = pygame.mixer.Sound("eat_sound.wav")  
+    game_over_sound = pygame.mixer.Sound("game_over.mp3")  
+    pygame.mixer.music.load("background_music.mp3")  
+    pygame.mixer.music.play(-1)  
+
     cell_size = 20
-    config_file = sys.argv[1]
-    config = load_config(config_file)
+    config = load_config(sys.argv[1])
     board_size = config["board_size"]
     initial_obstacles = [tuple(obs) for obs in config["obstacles"]]
 
@@ -65,29 +71,36 @@ def main():
 
     show_welcome_screen(screen, font, board_size, cell_size)
 
+    # Mărirea dimensiunilor imaginilor
+    scale_factor = 1.7
+
     snake_segment_image = pygame.image.load("snake_segment.png")
     snake_segment_image = pygame.transform.scale(
-        snake_segment_image, (int(cell_size * 2), int(cell_size * 2))
+        snake_segment_image, (int(cell_size * scale_factor), int(cell_size * scale_factor))
     )
     snake_head_image = pygame.image.load("snake_head.png")
     snake_head_image = pygame.transform.scale(
-        snake_head_image, (int(cell_size * 2), int(cell_size * 2))
+        snake_head_image, (int(cell_size * scale_factor), int(cell_size * scale_factor))
     )
     food_image = pygame.image.load("food.png")
     food_image = pygame.transform.scale(
-        food_image, (int(cell_size * 2), int(cell_size * 2))
+        food_image, (int(cell_size * scale_factor), int(cell_size * scale_factor))
     )
     special_food_image = pygame.image.load("special_food.png")
     special_food_image = pygame.transform.scale(
-        special_food_image, (int(cell_size * 2), int(cell_size * 2))
+        special_food_image, (int(cell_size * scale_factor), int(cell_size * scale_factor))
     )
     obstacle_image = pygame.image.load("stone.png")
     obstacle_image = pygame.transform.scale(
-        obstacle_image, (int(cell_size * 2), int(cell_size * 2))
+        obstacle_image, (int(cell_size * scale_factor), int(cell_size * scale_factor))
     )
     background_image = pygame.image.load("background.png")
     background_image = pygame.transform.scale(
         background_image, (board_size[0] * cell_size, board_size[1] * cell_size)
+    )
+    game_over_image = pygame.image.load("game_over_image.png")
+    game_over_image = pygame.transform.scale(
+        game_over_image, (board_size[0] * cell_size, board_size[1] * cell_size)
     )
 
     def start_game():
@@ -118,6 +131,7 @@ def main():
                 score += 1
                 food.position = food.generate_new_position(obstacles, snake.body)
                 snake.grow()
+                eat_sound.play()
 
                 if score % 5 == 0 and score >= 5:
                     speed = min(15, speed + 1)
@@ -132,6 +146,7 @@ def main():
                 score += 3
                 special_food = None
                 special_food_timer = None
+                eat_sound.play()
 
             if special_food and time.time() > special_food_timer:
                 special_food = None
@@ -141,34 +156,28 @@ def main():
                 return score
 
             
-            snake_head_scaled = pygame.transform.scale(snake_head_image, (cell_size, cell_size))
-            snake_segment_scaled = pygame.transform.scale(snake_segment_image, (cell_size, cell_size))
-
-            
             screen.blit(background_image, (0, 0))
 
             
-            screen.blit(snake_head_scaled, (snake.body[0][0] * cell_size, snake.body[0][1] * cell_size))
+            screen.blit(snake_head_image, (snake.body[0][0] * cell_size, snake.body[0][1] * cell_size))
 
             
             for x, y in snake.body[1:]:
-                screen.blit(snake_segment_scaled, (x * cell_size, y * cell_size))
+                screen.blit(snake_segment_image, (x * cell_size, y * cell_size))
 
             
-            food_scaled = pygame.transform.scale(food_image, (cell_size, cell_size))
-            screen.blit(food_scaled, (food.position[0] * cell_size, food.position[1] * cell_size))
+            screen.blit(food_image, (food.position[0] * cell_size, food.position[1] * cell_size))
 
+            
             if special_food:
-                special_food_scaled = pygame.transform.scale(special_food_image, (cell_size, cell_size))
                 screen.blit(
-                    special_food_scaled,
+                    special_food_image,
                     (special_food.position[0] * cell_size, special_food.position[1] * cell_size),
                 )
 
-       
-            obstacle_scaled = pygame.transform.scale(obstacle_image, (cell_size, cell_size))
+            
             for x, y in obstacles:
-                screen.blit(obstacle_scaled, (x * cell_size, y * cell_size))
+                screen.blit(obstacle_image, (x * cell_size, y * cell_size))
 
             
             draw_text(screen, f"Score: {score}", font, text_color, (10, 10), shadow_color)
@@ -177,16 +186,12 @@ def main():
             pygame.display.flip()
             clock.tick(speed)
 
-
     def show_game_over_screen(score):
-        game_over_image = pygame.image.load("game_over_image.png")
-        game_over_image = pygame.transform.scale(
-            game_over_image, (board_size[0] * cell_size, board_size[1] * cell_size)
-        )
-        screen.fill((0, 0, 0))
-        screen.blit(game_over_image, (0, 0))
-        draw_text(screen, f"Score: {score}", font, text_color, (10, 10), shadow_color)
-        draw_text(screen, f"High Score: {high_score}", font, text_color, (10, 50), shadow_color)
+        pygame.mixer.music.stop()  
+        game_over_sound.play()  
+        screen.blit(game_over_image, (0, 0))  
+        draw_text(screen, f"Score: {score}", font, text_color, (10, 50), shadow_color)
+        draw_text(screen, f"High Score: {high_score}", font, text_color, (10, 90), shadow_color)
         pygame.display.flip()
 
         waiting = True
@@ -198,6 +203,7 @@ def main():
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         waiting = False
+                        pygame.mixer.music.play(-1)  
                     elif event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         sys.exit()
