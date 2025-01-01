@@ -1,13 +1,22 @@
 import random
 
+
 class Food:
     def __init__(self, board_size, obstacles, snake_body):
+        """
+        Initialize the food with a random position that is not
+        on the snake's body or on an obstacle.
+        """
         self.board_size = board_size
         self.obstacles = obstacles
         self.snake_body = snake_body
         self.position = self.generate_new_position(obstacles, snake_body)
 
     def generate_new_position(self, obstacles, snake_body, min_distance=2):
+        """
+        Generate a new position for the food that is not on
+        the snake's body or on an obstacle.
+        """
         while True:
             x = random.randint(0, self.board_size[0] - 1)
             y = random.randint(0, self.board_size[1] - 1)
@@ -15,11 +24,14 @@ class Food:
 
             if (
                 new_position not in snake_body
-                and all(self.calculate_distance(new_position, obs) >= min_distance for obs in obstacles)
+                and all(self.calculate_distance(new_position, obs)
+                        >= min_distance for obs in obstacles)
             ):
                 return new_position
 
     @staticmethod
     def calculate_distance(pos1, pos2):
-        #calculeaza distanta Manhattan intre doua pozitii
+        """
+        Calculate the Manhattan distance between two positions.
+        """
         return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
