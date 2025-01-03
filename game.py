@@ -33,7 +33,7 @@ def show_welcome_screen(screen, font, board_size, cell_size):
     """
     Display the welcome screen with the game title.
     """
-    welcome_image = pygame.image.load("welcome_image.png")
+    welcome_image = pygame.image.load("./images/welcome_image.png")
     welcome_image = pygame.transform.scale(
         welcome_image, (board_size[0] * cell_size, board_size[1] * cell_size)
     )
@@ -63,9 +63,9 @@ def main():
     pygame.init()
     pygame.mixer.init()
 
-    eat_sound = pygame.mixer.Sound("eat_sound.wav")
-    game_over_sound = pygame.mixer.Sound("game_over.mp3")
-    pygame.mixer.music.load("background_music.mp3")
+    eat_sound = pygame.mixer.Sound("./sounds/eat_sound.wav")
+    game_over_sound = pygame.mixer.Sound("./sounds/game_over.mp3")
+    pygame.mixer.music.load("./sounds/background_music.mp3")
     pygame.mixer.music.play(-1)
 
     cell_size = 20
@@ -88,39 +88,39 @@ def main():
 
     scale_factor = 1.7
 
-    snake_segment_image = pygame.image.load("snake_segment.png")
+    snake_segment_image = pygame.image.load("./images/snake_segment.png")
     snake_segment_image = pygame.transform.scale(
         snake_segment_image, (int(cell_size * scale_factor),
                               int(cell_size * scale_factor))
     )
-    snake_head_image = pygame.image.load("snake_head.png")
+    snake_head_image = pygame.image.load("./images/snake_head.png")
     snake_head_image = pygame.transform.scale(
         snake_head_image, (int(cell_size * scale_factor),
                            int(cell_size * scale_factor))
     )
-    food_image = pygame.image.load("food.png")
+    food_image = pygame.image.load("./images/food.png")
     food_image = pygame.transform.scale(
         food_image, (int(cell_size * scale_factor),
                      int(cell_size * scale_factor))
     )
-    special_food_image = pygame.image.load("special_food.png")
+    special_food_image = pygame.image.load("./images/special_food.png")
     special_food_image = pygame.transform.scale(
         special_food_image,
         (int(cell_size * scale_factor),
          int(cell_size * scale_factor))
     )
-    obstacle_image = pygame.image.load("stone.png")
+    obstacle_image = pygame.image.load("./images/stone.png")
     obstacle_image = pygame.transform.scale(
         obstacle_image,
         (int(cell_size * scale_factor),
          int(cell_size * scale_factor))
     )
-    background_image = pygame.image.load("background.png")
+    background_image = pygame.image.load("./images/background.png")
     background_image = pygame.transform.scale(
         background_image,
         (board_size[0] * cell_size, board_size[1] * cell_size)
     )
-    game_over_image = pygame.image.load("game_over_image.png")
+    game_over_image = pygame.image.load("./images/game_over_image.png")
     game_over_image = pygame.transform.scale(
         game_over_image, (board_size[0] * cell_size, board_size[1] * cell_size)
     )
@@ -204,27 +204,6 @@ def main():
 
             for x, y in obstacles:
                 screen.blit(obstacle_image, (x * cell_size, y * cell_size))
-            '''
-            # Afișează scorul și scorul maxim sus, unul lângă altul
-            draw_text_box(
-                screen,
-                f"Score: {score}",
-                font,
-                text_color,
-                (10, 10),
-                background_color=(50, 50, 50),
-                shadow_color=shadow_color
-            )
-            draw_text_box(
-                screen,
-                f"High Score: {high_score}",
-                font,
-                text_color,
-                (200, 10),
-                background_color=(50, 50, 50),
-                shadow_color=shadow_color
-            )
-            '''
             pygame.display.flip()
             clock.tick(speed)
 
