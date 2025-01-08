@@ -79,14 +79,14 @@ def main():
     clock = pygame.time.Clock()
 
     font = pygame.font.Font("OpenSans-VariableFont_wdth,wght.ttf", 36)
-    shadow_color = (0, 0, 0)
+    shadow_color = (136, 8, 8)
     text_color = (255, 255, 255)
 
     high_score = 0
 
     show_welcome_screen(screen, font, board_size, cell_size)
 
-    scale_factor = 1.7
+    scale_factor = 1.3
 
     snake_segment_image = pygame.image.load("./images/snake_segment.png")
     snake_segment_image = pygame.transform.scale(
@@ -175,6 +175,8 @@ def main():
                 score += 3
                 special_food = None
                 special_food_timer = None
+                for _ in range(3):
+                    snake.grow()
                 eat_sound.play()
 
             if special_food and time.time() > special_food_timer:

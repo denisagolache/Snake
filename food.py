@@ -18,9 +18,8 @@ class Food:
         the snake's body or on an obstacle.
         """
         while True:
-            x = random.randint(0, self.board_size[0] - 1)
-            y = random.randint(0, self.board_size[1] - 1)
-            new_position = (x, y)
+            new_position = (random.randint(0, self.board_size[0] - 1), 
+                            random.randint(0, self.board_size[1] - 1))
 
             if (
                 new_position not in snake_body
@@ -29,8 +28,7 @@ class Food:
             ):
                 return new_position
 
-    @staticmethod
-    def calculate_distance(pos1, pos2):
+    def calculate_distance(self, pos1, pos2):
         """
         Calculate the Manhattan distance between two positions.
         """
